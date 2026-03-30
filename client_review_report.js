@@ -231,6 +231,7 @@ looker.plugins.visualizations.add({
 
     // ── Column definitions ──────────────────────────────────────────
     var columns = [
+      { key: F.location,   label: "Location",           cls: "" },
       { key: F.apptId,     label: "Appt ID",          cls: "" },
       { key: F.dos,        label: "Date of Service",   cls: "" },
       { key: F.patientId,  label: "Patient ID",        cls: "" },
@@ -242,9 +243,8 @@ looker.plugins.visualizations.add({
       { key: F.source,     label: "Source",             cls: "" },
       { key: F.clinRev,    label: "Clinical Revenue",   cls: "num", fmt: "usd" },
       { key: F.pharmRev,   label: "Pharmacy Revenue",   cls: "num", fmt: "usd" },
-      { key: F.cogs,       label: "COGS / Price",       cls: "num", fmt: "usd" },
       { key: F.closingPd,  label: "Closing Period",     cls: "" },
-      { key: F.location,   label: "Location",           cls: "" },
+      { key: F.cogs,       label: "COGS / Price",       cls: "num", fmt: "usd" },
       { key: F.gm,         label: "Gross Margin",       cls: "num", fmt: "usd" },
       { key: F.mPct,       label: "Margin %",           cls: "num", fmt: "pct" }
     ];
