@@ -117,8 +117,21 @@ looker.plugins.visualizations.add({
     var allFields = dims.concat(meas);
 
     function findField(shortNames) {
+      // First pass: exact suffix match (field name ends with the short name)
       for (var i = 0; i < allFields.length; i++) {
         var fName = allFields[i].name.toLowerCase();
+        for (var j = 0; j < shortNames.length; j++) {
+          var sn = shortNames[j];
+          if (fName === sn || fName.substr(fName.length - sn.length - 1) === "." + sn) {
+            return allFields[i].name;
+          }
+        }
+      }
+      // Fallback: contains match (but skip fields with "total_" prefix)
+      for (var i = 0; i < allFields.length; i++) {
+        var fName = allFields[i].name.toLowerCase();
+        var baseName = fName.split(".").pop() || fName;
+        if (baseName.indexOf("total_") === 0) continue;
         for (var j = 0; j < shortNames.length; j++) {
           if (fName.indexOf(shortNames[j]) !== -1) return allFields[i].name;
         }
@@ -191,10 +204,10 @@ looker.plugins.visualizations.add({
       return v == null ? "" : String(v);
     }
 
-    function fmtUSD(v) {
+    function fmtUSD(v, isCogs) {
       if (v == null || v === "" || isNaN(v)) return "";
       var n = Number(v);
-      if (config.hide_zero_cogs && Math.abs(n) < 0.005) return "";
+      if (config.hide_zero_cogs && isCogs && Math.abs(n) < 0.005) return "";
       var neg = n < 0;
       var abs = Math.abs(n);
       var formatted = "$" + abs.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -329,7 +342,7 @@ looker.plugins.visualizations.add({
 
         // Format value
         if (col.fmt === "usd") {
-          val = fmtUSD(cellVal(row, col.key));
+          val = fmtUSD(cellVal(row, col.key), col.key === F.cogs);
         } else if (col.fmt === "pct") {
           val = fmtPct(cellVal(row, col.key));
         } else {
