@@ -158,7 +158,8 @@ looker.plugins.visualizations.add({
       pharmRev:   findField(["pharmacy_revenue"]),
       cogs:       findField(["cogs_price", "cogs"]),
       gm:         findField(["gross_margin"]),
-      mPct:       findField(["margin_pct"])
+      mPct:       findField(["margin_pct"]),
+      lineNotes:  findField(["line_notes"])
     };
 
     // ── Style ───────────────────────────────────────────────────────
@@ -246,7 +247,8 @@ looker.plugins.visualizations.add({
       { key: F.closingPd,  label: "Closing Period",     cls: "" },
       { key: F.cogs,       label: "COGS / Price",       cls: "num", fmt: "usd" },
       { key: F.gm,         label: "Gross Margin",       cls: "num", fmt: "usd" },
-      { key: F.mPct,       label: "Margin %",           cls: "num", fmt: "pct" }
+      { key: F.mPct,       label: "Margin %",           cls: "num", fmt: "pct" },
+      { key: F.lineNotes,  label: "Line Notes",          cls: "" }
     ];
 
     // Filter to only columns that exist in the query
