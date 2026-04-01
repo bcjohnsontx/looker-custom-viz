@@ -329,9 +329,9 @@ looker.plugins.visualizations.add({
           }
         }
 
-        // For Revenue Detail rows, only show closing period, revenue, and notes
+        // For Revenue Detail rows, show identifying + revenue columns
         if (rt === "Revenue Detail") {
-          var revKeys = [F.closingPd, F.pharmRev, F.lineNotes];
+          var revKeys = [F.itemId, F.drugName, F.pharmRev, F.closingPd, F.lineNotes];
           if (revKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
