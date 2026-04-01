@@ -13,7 +13,8 @@
  *               ndc, lot_number, expiration_date, source, closing_period,
  *               location_name, row_type_label, row_type, sub_sort, group_name
  *   Measures:   clinical_revenue, pharmacy_revenue, cogs_price,
- *               gross_margin, margin_pct
+ *               gross_margin, margin_pct, ins_paid_net, pt_paid_net,
+ *               total_collected, actual_margin
  *
  * Installation: Admin > Platform > Visualizations > Add Visualization
  *   ID:    client_review_report
@@ -159,6 +160,10 @@ looker.plugins.visualizations.add({
       cogs:       findField(["cogs_price", "cogs"]),
       gm:         findField(["gross_margin"]),
       mPct:       findField(["margin_pct"]),
+      insPaid:    findField(["ins_paid_net"]),
+      ptPaid:     findField(["pt_paid_net"]),
+      totalColl:  findField(["total_collected"]),
+      actMargin:  findField(["actual_margin"]),
       lineNotes:  findField(["line_notes"])
     };
 
@@ -248,6 +253,10 @@ looker.plugins.visualizations.add({
       { key: F.cogs,       label: "COGS / Price",       cls: "num", fmt: "usd" },
       { key: F.gm,         label: "Gross Margin",       cls: "num", fmt: "usd" },
       { key: F.mPct,       label: "Margin %",           cls: "num", fmt: "pct" },
+      { key: F.insPaid,    label: "Ins Paid (Net)",     cls: "num", fmt: "usd" },
+      { key: F.ptPaid,     label: "Pt Paid (Net)",      cls: "num", fmt: "usd" },
+      { key: F.totalColl,  label: "Total Collected",    cls: "num", fmt: "usd" },
+      { key: F.actMargin,  label: "Actual Margin",      cls: "num", fmt: "usd" },
       { key: F.lineNotes,  label: "Line Notes",          cls: "" }
     ];
 
@@ -316,7 +325,7 @@ looker.plugins.visualizations.add({
 
         // For summary rows in compact mode, only show key columns
         if (config.compact_mode && rt === "Appointment Summary") {
-          var summaryKeys = [F.apptId, F.dos, F.patientId, F.drugName, F.clinRev, F.pharmRev, F.location, F.gm, F.mPct, F.groupName];
+          var summaryKeys = [F.apptId, F.dos, F.patientId, F.drugName, F.clinRev, F.pharmRev, F.location, F.gm, F.mPct, F.insPaid, F.ptPaid, F.totalColl, F.actMargin, F.groupName];
           if (summaryKeys.indexOf(col.key) === -1 &&
               col.key !== F.source && col.key !== F.closingPd) {
             html.push('<td class="' + col.cls + '"></td>');
@@ -335,7 +344,7 @@ looker.plugins.visualizations.add({
 
         // For Grand Total, only show financials
         if (rt === "Grand Total") {
-          var gtKeys = [F.drugName, F.clinRev, F.pharmRev, F.cogs, F.gm, F.mPct];
+          var gtKeys = [F.drugName, F.clinRev, F.pharmRev, F.cogs, F.gm, F.mPct, F.insPaid, F.ptPaid, F.totalColl, F.actMargin];
           if (gtKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
@@ -351,7 +360,18 @@ looker.plugins.visualizations.add({
           val = cellRendered(row, col.key);
         }
 
-        html.push('<td class="' + col.cls + '">' + escHtml(val) + "</td>");
+        // Color actual margin: green positive, red negative
+        var tdStyle = "";
+        if (col.key === F.actMargin && val != null && val !== "") {
+          var raw = cellVal(row, col.key);
+          if (raw != null && Number(raw) < 0) {
+            tdStyle = ' style="color:#C00000;font-weight:bold;"';
+          } else if (raw != null && Number(raw) > 0) {
+            tdStyle = ' style="color:#2E7D32;font-weight:bold;"';
+          }
+        }
+
+        html.push('<td class="' + col.cls + '"' + tdStyle + '>' + escHtml(val) + "</td>");
       }
 
       html.push("</tr>");
