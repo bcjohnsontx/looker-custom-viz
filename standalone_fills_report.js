@@ -248,12 +248,32 @@ looker.plugins.visualizations.add({
 
     // ── Determine row type for each data row ────────────────────────
     function getRowType(row) {
+      // Try explicit row_type field first
       var num = cellVal(row, F.rowType);
       if (num != null) {
         var map = { 1: "Fill Summary", 2: "Revenue Detail", 3: "Component", 4: "COGS Total" };
-        return map[num] || "Unknown";
+        if (map[num]) return map[num];
       }
-      return "Unknown";
+      // Heuristic fallback when row_type is hidden / not in query
+      var drugName = cellVal(row, F.drugName);
+      if (drugName && String(drugName).toLowerCase() === "total cogs") return "COGS Total";
+      var notes = cellVal(row, F.lineNotes);
+      if (notes) {
+        var n = String(notes).toLowerCase();
+        if (n.indexOf("component") !== -1) return "Component";
+        if (n.indexOf("revenue") !== -1 || n.indexOf("closing") !== -1) return "Revenue Detail";
+      }
+      // If gross_margin exists, it's a summary row
+      var gm = cellVal(row, F.gm);
+      if (gm != null && gm !== "") return "Fill Summary";
+      // If NDC or lot exists without gross margin, it's a component
+      var ndc = cellVal(row, F.ndc);
+      var lot = cellVal(row, F.lot);
+      if ((ndc && ndc !== "") || (lot && lot !== "")) return "Component";
+      // If closing period exists, it's revenue detail
+      var cp = cellVal(row, F.closingPd);
+      if (cp && cp !== "") return "Revenue Detail";
+      return "Fill Summary";
     }
 
     function rowClass(rowType) {
