@@ -253,8 +253,8 @@ looker.plugins.visualizations.add({
       { key: F.cogs,       label: "COGS / Price",       cls: "num", fmt: "usd" },
       { key: F.gm,         label: "Gross Margin",       cls: "num", fmt: "usd" },
       { key: F.mPct,       label: "Margin %",           cls: "num", fmt: "pct" },
-      { key: F.insPaid,    label: "Ins Paid (Net)",     cls: "num", fmt: "usd" },
-      { key: F.ptPaid,     label: "Pt Paid (Net)",      cls: "num", fmt: "usd" },
+      { key: F.insPaid,    label: "Ins Paid",     cls: "num", fmt: "usd" },
+      { key: F.ptPaid,     label: "Pt Paid",      cls: "num", fmt: "usd" },
       { key: F.totalColl,  label: "Total Collected",    cls: "num", fmt: "usd" },
       { key: F.actMargin,  label: "Actual Margin",      cls: "num", fmt: "usd" },
       { key: F.lineNotes,  label: "Line Notes",          cls: "" }
