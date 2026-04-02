@@ -132,6 +132,7 @@ looker.plugins.visualizations.add({
     var F = {
       fillId:     findField(["fill_id"]),
       itemId:     findField(["item_id"]),
+      invId:      findField(["inventory_id"]),
       dos:        findField(["dos_date"]),
       patientId:  findField(["patient_id"]),
       drugName:   findField(["drug_item_name"]),
@@ -221,7 +222,8 @@ looker.plugins.visualizations.add({
 
     // ── Column definitions ──────────────────────────────────────────
     var columns = [
-      { key: F.itemId,     label: "RX / Fill ID",        cls: "" },
+      { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
+      { key: F.invId,      label: "Inventory ID",         cls: "" },
       { key: F.dos,        label: "Fill Date",           cls: "" },
       { key: F.patientId,  label: "Patient ID",          cls: "" },
       { key: F.drugName,   label: "Drug / Item Name",    cls: "" },
@@ -340,7 +342,7 @@ looker.plugins.visualizations.add({
 
         // For Component rows, show drug/item, NDC, lot, expiration, COGS, notes
         if (rt === "Component") {
-          var compKeys = [F.drugName, F.ndc, F.lot, F.expiration, F.cogs, F.lineNotes];
+          var compKeys = [F.invId, F.drugName, F.ndc, F.lot, F.expiration, F.cogs, F.lineNotes];
           if (compKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
