@@ -223,9 +223,9 @@ looker.plugins.visualizations.add({
     // ── Column definitions ──────────────────────────────────────────
     var columns = [
       { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
-      { key: F.invId,      label: "Inventory ID",         cls: "" },
       { key: F.dos,        label: "Fill Date",           cls: "" },
       { key: F.patientId,  label: "Patient ID",          cls: "" },
+      { key: F.invId,      label: "Inventory ID",         cls: "" },
       { key: F.drugName,   label: "Drug / Item Name",    cls: "" },
       { key: F.ndc,        label: "NDC",                 cls: "" },
       { key: F.lot,        label: "Lot",                 cls: "" },
