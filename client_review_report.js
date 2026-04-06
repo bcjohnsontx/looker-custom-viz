@@ -164,8 +164,19 @@ looker.plugins.visualizations.add({
       ptPaid:     findField(["pt_paid_net"]),
       totalColl:  findField(["total_collected"]),
       actMargin:  findField(["actual_margin"]),
-      lineNotes:  findField(["line_notes"])
+      lineNotes:  findField(["line_notes"]),
+      subSort:    findField(["sub_sort"])
     };
+
+    // ── Explore validation ──────────────────────────────────────────
+    if (!F.rowTypeNum && !F.rowType) {
+      this.addError({
+        title: "Incompatible Explore",
+        message: "This visualization is designed for the Client Review Detail explore. Required field 'row_type' not found."
+      });
+      done();
+      return;
+    }
 
     // ── Style ───────────────────────────────────────────────────────
     var fontSize = config.font_size || 12;
@@ -263,6 +274,27 @@ looker.plugins.visualizations.add({
     // Filter to only columns that exist in the query
     columns = columns.filter(function (c) { return c.key != null; });
 
+    // ── Sort guard: enforce correct row hierarchy ─────────────────
+    //    Prevents users from breaking the report by changing sort in Explore
+    data.sort(function (a, b) {
+      var aType = cellVal(a, F.rowTypeNum) != null ? Number(cellVal(a, F.rowTypeNum)) : 99;
+      var bType = cellVal(b, F.rowTypeNum) != null ? Number(cellVal(b, F.rowTypeNum)) : 99;
+      // Grand Total (type 0) always last
+      if (aType === 0 && bType !== 0) return 1;
+      if (bType === 0 && aType !== 0) return -1;
+      if (aType === 0 && bType === 0) return 0;
+      // Group by appointment ID
+      var aAppt = Number(cellVal(a, F.apptId)) || 0;
+      var bAppt = Number(cellVal(b, F.apptId)) || 0;
+      if (aAppt !== bAppt) return aAppt - bAppt;
+      // Within appointment: sort by row_type (Summary=1, Billing=2, Fill=3, …)
+      if (aType !== bType) return aType - bType;
+      // Within same type: sort by sub_sort
+      var aSub = Number(cellVal(a, F.subSort)) || 0;
+      var bSub = Number(cellVal(b, F.subSort)) || 0;
+      return aSub - bSub;
+    });
+
     // ── Determine row type for each data row ────────────────────────
     function getRowType(row) {
       var label = cellVal(row, F.rowType);
@@ -352,12 +384,18 @@ looker.plugins.visualizations.add({
         }
 
         // Format value
+        var useHtml = false;
         if (col.fmt === "usd") {
           val = fmtUSD(cellVal(row, col.key), col.key === F.cogs);
         } else if (col.fmt === "pct") {
           val = fmtPct(cellVal(row, col.key));
         } else {
-          val = cellRendered(row, col.key);
+          if (row[col.key]) {
+            val = LookerCharts.Utils.htmlForCell(row[col.key]);
+            useHtml = true;
+          } else {
+            val = "";
+          }
         }
 
         // Color actual margin: green positive, red negative
@@ -371,7 +409,7 @@ looker.plugins.visualizations.add({
           }
         }
 
-        html.push('<td class="' + col.cls + '"' + tdStyle + '>' + escHtml(val) + "</td>");
+        html.push('<td class="' + col.cls + '"' + tdStyle + '>' + (useHtml ? val : escHtml(val)) + "</td>");
       }
 
       html.push("</tr>");

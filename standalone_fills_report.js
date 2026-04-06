@@ -157,6 +157,16 @@ looker.plugins.visualizations.add({
       subSort:    findField(["sub_sort"])
     };
 
+    // ── Explore validation ──────────────────────────────────────────
+    if (!F.rowType && !F.fillId) {
+      this.addError({
+        title: "Incompatible Explore",
+        message: "This visualization is designed for the Standalone Pharmacy Fills explore. Required fields 'row_type' or 'fill_id' not found."
+      });
+      done();
+      return;
+    }
+
     // ── Style ───────────────────────────────────────────────────────
     var fontSize = config.font_size || 12;
     var headerBg = config.header_bg || "#E8F0FE";
@@ -247,6 +257,23 @@ looker.plugins.visualizations.add({
 
     // Filter to only columns that exist in the query
     columns = columns.filter(function (c) { return c.key != null; });
+
+    // ── Sort guard: enforce correct row hierarchy ─────────────────
+    //    Prevents users from breaking the report by changing sort in Explore
+    data.sort(function (a, b) {
+      var aType = Number(cellVal(a, F.rowType)) || 0;
+      var bType = Number(cellVal(b, F.rowType)) || 0;
+      // Group by fill ID
+      var aFill = Number(cellVal(a, F.fillId)) || 0;
+      var bFill = Number(cellVal(b, F.fillId)) || 0;
+      if (aFill !== bFill) return aFill - bFill;
+      // Within fill: sort by row_type (Summary=1, Revenue=2, Component=3, COGS=4)
+      if (aType !== bType) return aType - bType;
+      // Within same type: sort by sub_sort
+      var aSub = Number(cellVal(a, F.subSort)) || 0;
+      var bSub = Number(cellVal(b, F.subSort)) || 0;
+      return aSub - bSub;
+    });
 
     // ── Determine row type for each data row ────────────────────────
     function getRowType(row) {
@@ -359,12 +386,18 @@ looker.plugins.visualizations.add({
         }
 
         // Format value
+        var useHtml = false;
         if (col.fmt === "usd") {
           val = fmtUSD(cellVal(row, col.key), col.key === F.cogs);
         } else if (col.fmt === "pct") {
           val = fmtPct(cellVal(row, col.key));
         } else {
-          val = cellRendered(row, col.key);
+          if (row[col.key]) {
+            val = LookerCharts.Utils.htmlForCell(row[col.key]);
+            useHtml = true;
+          } else {
+            val = "";
+          }
         }
 
         // Color gross margin and actual margin
@@ -378,7 +411,7 @@ looker.plugins.visualizations.add({
           }
         }
 
-        html.push('<td class="' + col.cls + '"' + tdStyle + '>' + escHtml(val) + "</td>");
+        html.push('<td class="' + col.cls + '"' + tdStyle + '>' + (useHtml ? val : escHtml(val)) + "</td>");
       }
 
       html.push("</tr>");
