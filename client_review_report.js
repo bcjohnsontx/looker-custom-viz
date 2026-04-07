@@ -165,7 +165,9 @@ looker.plugins.visualizations.add({
       totalColl:  findField(["total_collected"]),
       actMargin:  findField(["actual_margin"]),
       lineNotes:  findField(["line_notes"]),
-      subSort:    findField(["sub_sort"])
+      subSort:    findField(["sub_sort"]),
+      distType:   findField(["distribution_type"]),
+      benefitType:findField(["benefit_type"])
     };
 
     // ── Explore validation ──────────────────────────────────────────
@@ -257,6 +259,8 @@ looker.plugins.visualizations.add({
       { key: F.ndc,        label: "NDC",               cls: "" },
       { key: F.lot,        label: "Lot",               cls: "" },
       { key: F.expiration, label: "Expiration",         cls: "" },
+      { key: F.distType,   label: "Distribution Type",  cls: "" },
+      { key: F.benefitType,label: "Benefit Type",       cls: "" },
       { key: F.source,     label: "Source",             cls: "" },
       { key: F.clinRev,    label: "Clinical Revenue",   cls: "num", fmt: "usd" },
       { key: F.pharmRev,   label: "Pharmacy Revenue",   cls: "num", fmt: "usd" },
@@ -357,7 +361,7 @@ looker.plugins.visualizations.add({
 
         // For summary rows in compact mode, only show key columns
         if (config.compact_mode && rt === "Appointment Summary") {
-          var summaryKeys = [F.apptId, F.dos, F.patientId, F.drugName, F.clinRev, F.pharmRev, F.location, F.gm, F.mPct, F.insPaid, F.ptPaid, F.totalColl, F.actMargin, F.groupName];
+          var summaryKeys = [F.apptId, F.dos, F.patientId, F.drugName, F.clinRev, F.pharmRev, F.location, F.gm, F.mPct, F.insPaid, F.ptPaid, F.totalColl, F.actMargin, F.groupName, F.distType, F.benefitType];
           if (summaryKeys.indexOf(col.key) === -1 &&
               col.key !== F.source && col.key !== F.closingPd) {
             html.push('<td class="' + col.cls + '"></td>');
