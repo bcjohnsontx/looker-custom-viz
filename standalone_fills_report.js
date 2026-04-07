@@ -156,7 +156,8 @@ looker.plugins.visualizations.add({
       rowType:    findField(["row_type"]),
       subSort:    findField(["sub_sort"]),
       distType:   findField(["distribution_type"]),
-      benefitType:findField(["benefit_type"])
+      benefitType:findField(["benefit_type"]),
+      fillStatus: findField(["fill_status"])
     };
 
     // ── Explore validation ──────────────────────────────────────────
@@ -244,6 +245,7 @@ looker.plugins.visualizations.add({
       { key: F.expiration, label: "Expiration",           cls: "" },
       { key: F.distType,   label: "Distribution Type",  cls: "" },
       { key: F.benefitType,label: "Benefit Type",       cls: "" },
+      { key: F.fillStatus, label: "Fill Status",         cls: "" },
       { key: F.payer,      label: "Payer",               cls: "" },
       { key: F.pharmRev,   label: "Pharmacy Revenue",     cls: "num", fmt: "usd" },
       { key: F.closingPd,  label: "Closing Period",       cls: "" },
@@ -355,7 +357,7 @@ looker.plugins.visualizations.add({
           var summaryKeys = [F.itemId, F.dos, F.patientId, F.drugName, F.payer,
                              F.pharmRev, F.cogs, F.gm, F.mPct,
                              F.insPaid, F.ptPaid, F.totalColl, F.actMargin,
-                             F.shipTo, F.location, F.distType, F.benefitType];
+                             F.shipTo, F.location, F.distType, F.benefitType, F.fillStatus];
           if (summaryKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
