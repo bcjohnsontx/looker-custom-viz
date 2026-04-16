@@ -366,7 +366,7 @@ looker.plugins.visualizations.add({
 
         // For Revenue Detail rows, show identifying + revenue columns
         if (rt === "Revenue Detail") {
-          var revKeys = [F.itemId, F.drugName, F.pharmRev, F.closingPd, F.lineNotes];
+          var revKeys = [F.itemId, F.drugName, F.pharmRev, F.closingPd, F.benefitType, F.lineNotes];
           if (revKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
