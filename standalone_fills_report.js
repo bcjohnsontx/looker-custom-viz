@@ -157,7 +157,9 @@ looker.plugins.visualizations.add({
       subSort:    findField(["sub_sort"]),
       distType:   findField(["distribution_type"]),
       benefitType:findField(["benefit_type"]),
-      fillStatus: findField(["fill_status"])
+      fillStatus: findField(["fill_status"]),
+      delivTkt:   findField(["delivery_ticket"]),
+      shippedDt:  findField(["shipped_date"])
     };
 
     // ── Explore validation ──────────────────────────────────────────
@@ -248,6 +250,8 @@ looker.plugins.visualizations.add({
       { key: F.distType,   label: "Distribution Type",  cls: "" },
       { key: F.benefitType,label: "Benefit Type",       cls: "" },
       { key: F.fillStatus, label: "Fill Status",         cls: "" },
+      { key: F.delivTkt,   label: "Delivery Ticket",     cls: "" },
+      { key: F.shippedDt,  label: "Shipped Date",        cls: "" },
       { key: F.payer,      label: "Payer",               cls: "" },
       { key: F.pharmRev,   label: "Pharmacy Revenue",     cls: "num", fmt: "usd" },
       { key: F.closingPd,  label: "Closing Period",       cls: "" },
@@ -357,7 +361,8 @@ looker.plugins.visualizations.add({
           var summaryKeys = [F.itemId, F.dos, F.patientId, F.drugName, F.payer,
                              F.pharmRev, F.cogs, F.gm, F.mPct,
                              F.insPaid, F.ptPaid, F.totalColl, F.actMargin,
-                             F.shipTo, F.location, F.distType, F.benefitType, F.fillStatus];
+                             F.shipTo, F.location, F.distType, F.benefitType, F.fillStatus,
+                             F.delivTkt, F.shippedDt];
           if (summaryKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
