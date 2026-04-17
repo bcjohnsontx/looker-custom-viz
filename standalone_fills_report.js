@@ -235,6 +235,8 @@ looker.plugins.visualizations.add({
 
     // ── Column definitions ──────────────────────────────────────────
     var columns = [
+      { key: F.location,   label: "Location",             cls: "" },
+      { key: F.shipTo,     label: "Ship To",              cls: "" },
       { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
       { key: F.dos,        label: "Fill Date",           cls: "" },
       { key: F.patientId,  label: "Patient ID",          cls: "" },
@@ -256,8 +258,6 @@ looker.plugins.visualizations.add({
       { key: F.ptPaid,     label: "Pt Paid",        cls: "num", fmt: "usd" },
       { key: F.totalColl,  label: "Total Collected",      cls: "num", fmt: "usd" },
       { key: F.actMargin,  label: "Actual Margin",        cls: "num", fmt: "usd" },
-      { key: F.shipTo,     label: "Ship To",              cls: "" },
-      { key: F.location,   label: "Location",             cls: "" },
       { key: F.lineNotes,  label: "Notes",                cls: "" }
     ];
 
@@ -366,7 +366,7 @@ looker.plugins.visualizations.add({
 
         // For Revenue Detail rows, show identifying + revenue columns
         if (rt === "Revenue Detail") {
-          var revKeys = [F.itemId, F.drugName, F.pharmRev, F.closingPd, F.benefitType, F.lineNotes];
+          var revKeys = [F.itemId, F.drugName, F.payer, F.pharmRev, F.closingPd, F.benefitType, F.lineNotes];
           if (revKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
