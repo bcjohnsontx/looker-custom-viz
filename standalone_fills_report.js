@@ -375,7 +375,7 @@ looker.plugins.visualizations.add({
 
         // For Component rows, show drug/item, NDC, lot, expiration, COGS, notes
         if (rt === "Component") {
-          var compKeys = [F.invId, F.drugName, F.ndc, F.lot, F.expiration, F.cogs, F.lineNotes];
+          var compKeys = [F.itemId, F.invId, F.drugName, F.ndc, F.lot, F.expiration, F.cogs, F.lineNotes];
           if (compKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
