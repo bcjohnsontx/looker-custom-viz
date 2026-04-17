@@ -159,7 +159,8 @@ looker.plugins.visualizations.add({
       benefitType:findField(["benefit_type"]),
       fillStatus: findField(["fill_status"]),
       delivTkt:   findField(["delivery_ticket"]),
-      shippedDt:  findField(["shipped_date"])
+      shippedDt:  findField(["shipped_date"]),
+      delivDt:    findField(["delivery_date"])
     };
 
     // ── Explore validation ──────────────────────────────────────────
@@ -242,6 +243,7 @@ looker.plugins.visualizations.add({
       { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
       { key: F.delivTkt,   label: "Delivery Ticket",     cls: "", fmt: "id" },
       { key: F.shippedDt,  label: "Shipped Date",        cls: "", fmt: "date" },
+      { key: F.delivDt,    label: "Delivery Date",       cls: "", fmt: "date" },
       { key: F.dos,        label: "Fill Date",           cls: "", fmt: "date" },
       { key: F.patientId,  label: "Patient ID",          cls: "" },
       { key: F.invId,      label: "Inventory ID",         cls: "" },
@@ -362,7 +364,7 @@ looker.plugins.visualizations.add({
                              F.pharmRev, F.cogs, F.gm, F.mPct,
                              F.insPaid, F.ptPaid, F.totalColl, F.actMargin,
                              F.shipTo, F.location, F.distType, F.benefitType, F.fillStatus,
-                             F.delivTkt, F.shippedDt];
+                             F.delivTkt, F.shippedDt, F.delivDt];
           if (summaryKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
