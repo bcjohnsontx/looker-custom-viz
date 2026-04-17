@@ -240,7 +240,9 @@ looker.plugins.visualizations.add({
       { key: F.location,   label: "Location",             cls: "" },
       { key: F.shipTo,     label: "Ship To",              cls: "" },
       { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
-      { key: F.dos,        label: "Fill Date",           cls: "" },
+      { key: F.delivTkt,   label: "Delivery Ticket",     cls: "", fmt: "id" },
+      { key: F.shippedDt,  label: "Shipped Date",        cls: "", fmt: "date" },
+      { key: F.dos,        label: "Fill Date",           cls: "", fmt: "date" },
       { key: F.patientId,  label: "Patient ID",          cls: "" },
       { key: F.invId,      label: "Inventory ID",         cls: "" },
       { key: F.drugName,   label: "Drug / Item Name",    cls: "" },
@@ -250,8 +252,6 @@ looker.plugins.visualizations.add({
       { key: F.distType,   label: "Distribution Type",  cls: "" },
       { key: F.benefitType,label: "Benefit Type",       cls: "" },
       { key: F.fillStatus, label: "Fill Status",         cls: "" },
-      { key: F.delivTkt,   label: "Delivery Ticket",     cls: "" },
-      { key: F.shippedDt,  label: "Shipped Date",        cls: "" },
       { key: F.payer,      label: "Payer",               cls: "" },
       { key: F.pharmRev,   label: "Pharmacy Revenue",     cls: "num", fmt: "usd" },
       { key: F.closingPd,  label: "Closing Period",       cls: "" },
@@ -398,7 +398,21 @@ looker.plugins.visualizations.add({
 
         // Format value
         var useHtml = false;
-        if (col.fmt === "usd") {
+        if (col.fmt === "date") {
+          var raw = cellVal(row, col.key);
+          if (raw) {
+            var d = new Date(raw);
+            if (!isNaN(d.getTime())) {
+              var mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+              var dd = String(d.getUTCDate()).padStart(2, '0');
+              var yyyy = d.getUTCFullYear();
+              val = mm + '-' + dd + '-' + yyyy;
+            } else { val = raw; }
+          } else { val = ""; }
+        } else if (col.fmt === "id") {
+          var raw = cellVal(row, col.key);
+          val = (raw != null && raw !== "") ? String(Math.round(Number(raw))) : "";
+        } else if (col.fmt === "usd") {
           val = fmtUSD(cellVal(row, col.key), col.key === F.cogs);
         } else if (col.fmt === "pct") {
           val = fmtPct(cellVal(row, col.key));
