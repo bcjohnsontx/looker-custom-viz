@@ -167,7 +167,8 @@ looker.plugins.visualizations.add({
       lineNotes:  findField(["line_notes"]),
       subSort:    findField(["sub_sort"]),
       distType:   findField(["distribution_type"]),
-      benefitType:findField(["benefit_type"])
+      benefitType:findField(["benefit_type"]),
+      payer:      findField(["payer"])
     };
 
     // ── Explore validation ──────────────────────────────────────────
@@ -261,6 +262,7 @@ looker.plugins.visualizations.add({
       { key: F.expiration, label: "Expiration",         cls: "" },
       { key: F.distType,   label: "Distribution Type",  cls: "" },
       { key: F.benefitType,label: "Benefit Type",       cls: "" },
+      { key: F.payer,      label: "Payer",              cls: "" },
       { key: F.source,     label: "Source",             cls: "" },
       { key: F.clinRev,    label: "Clinical Revenue",   cls: "num", fmt: "usd" },
       { key: F.pharmRev,   label: "Pharmacy Revenue",   cls: "num", fmt: "usd" },
