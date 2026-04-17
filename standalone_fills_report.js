@@ -242,7 +242,7 @@ looker.plugins.visualizations.add({
       { key: F.shipTo,     label: "Ship To",              cls: "" },
       { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
       { key: F.delivTkt,   label: "Delivery Ticket",     cls: "", fmt: "id" },
-      { key: F.dos,        label: "Fill Date",           cls: "", fmt: "date" },
+      { key: F.dos,        label: "Billing DOS",         cls: "", fmt: "date" },
       { key: F.shippedDt,  label: "Shipped Date",        cls: "", fmt: "date" },
       { key: F.delivDt,    label: "Delivery Date",       cls: "", fmt: "date" },
       { key: F.patientId,  label: "Patient ID",          cls: "" },
