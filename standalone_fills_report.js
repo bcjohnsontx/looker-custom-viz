@@ -160,7 +160,8 @@ looker.plugins.visualizations.add({
       fillStatus: findField(["fill_status"]),
       delivTkt:   findField(["delivery_ticket"]),
       shippedDt:  findField(["shipped_date"]),
-      delivDt:    findField(["delivery_date"])
+      delivDt:    findField(["delivery_date"]),
+      groupName:  findField(["group_name"])
     };
 
     // ── Explore validation ──────────────────────────────────────────
@@ -238,6 +239,7 @@ looker.plugins.visualizations.add({
 
     // ── Column definitions ──────────────────────────────────────────
     var columns = [
+      { key: F.groupName,  label: "Group",                cls: "" },
       { key: F.location,   label: "Location",             cls: "" },
       { key: F.shipTo,     label: "Ship To",              cls: "" },
       { key: F.itemId,     label: "Pharmacy Identifier",  cls: "" },
@@ -275,7 +277,10 @@ looker.plugins.visualizations.add({
     data.sort(function (a, b) {
       var aType = Number(cellVal(a, F.rowType)) || 0;
       var bType = Number(cellVal(b, F.rowType)) || 0;
-      // Group by fill ID
+      // Group by group name first, then fill ID
+      var aGrp = String(cellVal(a, F.groupName) || '');
+      var bGrp = String(cellVal(b, F.groupName) || '');
+      if (aGrp !== bGrp) return aGrp < bGrp ? -1 : 1;
       var aFill = Number(cellVal(a, F.fillId)) || 0;
       var bFill = Number(cellVal(b, F.fillId)) || 0;
       if (aFill !== bFill) return aFill - bFill;
@@ -364,7 +369,7 @@ looker.plugins.visualizations.add({
                              F.pharmRev, F.cogs, F.gm, F.mPct,
                              F.insPaid, F.ptPaid, F.totalColl, F.actMargin,
                              F.shipTo, F.location, F.distType, F.benefitType, F.fillStatus,
-                             F.delivTkt, F.shippedDt, F.delivDt];
+                             F.delivTkt, F.shippedDt, F.delivDt, F.groupName];
           if (summaryKeys.indexOf(col.key) === -1) {
             html.push('<td class="' + col.cls + '"></td>');
             continue;
