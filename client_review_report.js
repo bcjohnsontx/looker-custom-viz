@@ -251,6 +251,7 @@ looker.plugins.visualizations.add({
 
     // ── Column definitions ──────────────────────────────────────────
     var columns = [
+      { key: F.groupName,  label: "Group",              cls: "" },
       { key: F.location,   label: "Location",           cls: "" },
       { key: F.apptId,     label: "Appt ID",          cls: "" },
       { key: F.dos,        label: "Date of Service",   cls: "" },
@@ -289,7 +290,10 @@ looker.plugins.visualizations.add({
       if (aType === 0 && bType !== 0) return 1;
       if (bType === 0 && aType !== 0) return -1;
       if (aType === 0 && bType === 0) return 0;
-      // Group by appointment ID
+      // Group by group name first, then appointment ID
+      var aGrp = String(cellVal(a, F.groupName) || '');
+      var bGrp = String(cellVal(b, F.groupName) || '');
+      if (aGrp !== bGrp) return aGrp < bGrp ? -1 : 1;
       var aAppt = Number(cellVal(a, F.apptId)) || 0;
       var bAppt = Number(cellVal(b, F.apptId)) || 0;
       if (aAppt !== bAppt) return aAppt - bAppt;
